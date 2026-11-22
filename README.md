@@ -21,3 +21,7 @@ See [ROADMAP.md](ROADMAP.md) for acceptance gates and the repair backlog. This r
 ## Data boundary
 
 This integration calls Pocket AI's external service. Its bearer token and queries are transmitted to that service, and responses may contain sensitive recordings, transcripts, and profile information. Upstream claims about end-to-end encryption, storage region, and data remaining local are unverified and must not be relied upon. Do not commit credentials or recording data.
+
+## Project review
+
+See the [2026-11-22 technical review](docs/PROJECT-REVIEW-2026-11-22.md) for reproduced defects, current Pocket API and MCP capabilities, and prioritized improvements.

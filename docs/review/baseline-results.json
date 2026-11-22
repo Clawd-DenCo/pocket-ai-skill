@@ -1,0 +1,17 @@
+{
+  "reproduced": 12,
+  "observations": [
+    "Python search omits timeout",
+    "Memory limit is not sent to server",
+    "Meeting date only appears in prose query",
+    "Action parser truncates repeated marker and misses lowercase",
+    "Negative memory limit returns items instead of rejecting",
+    "Application error becomes empty action list",
+    "Null data raises TypeError",
+    "ASAP urgency example misses uppercase keyword",
+    "Quoted shell query makes invalid JSON",
+    "Shell query can inject JSON fields",
+    "Shell pipeline masks curl failure",
+    "Documented direct shell execution lacks executable bit"
+  ]
+}
