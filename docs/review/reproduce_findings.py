@@ -1,6 +1,8 @@
 """Offline baseline defect probes; success means the documented defect reproduced.
 No real credentials, HTTP requests, or private recordings are used.
-Run from repository root: python3 docs/review/reproduce_findings.py
+Historical only: check out review commit 21dbe1c in a separate worktree to run
+this harness against its unchanged baseline. Do not run against corrected code.
+Current acceptance suite: python3 -m unittest discover -s tests -v
 """
 import importlib.util
 import json

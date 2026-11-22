@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pocket-ai-openclaw"
+version = "0.2.0"
+description = "Read-only Pocket AI integration and OpenClaw skill"
+requires-python = ">=3.11"
+dependencies = ["requests>=2.32.3,<3", "tzdata>=2024.1; sys_platform == 'win32'"]
+license = {text = "MIT (upstream declaration; see NOTICE.md)"}
+authors = [{name = "Clawd-DenCo maintainers"}]
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.26,<2"]
+
+[project.scripts]
+pocket-ai = "pocket_api:main"
+
+[tool.setuptools]
+py-modules = ["pocket_api", "pocket_models", "pocket_mcp", "pocket_webhooks"]

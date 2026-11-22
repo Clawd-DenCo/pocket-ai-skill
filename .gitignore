@@ -11,3 +11,9 @@ transcripts/
 *.wav
 *.mp3
 *.m4a
+
+*.egg-info/
+build/
+dist/
+*.sqlite*
+*.db
