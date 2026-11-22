@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pocket-ai-openclaw"
-version = "0.2.0"
-description = "Read-only Pocket AI integration and OpenClaw skill"
+version = "0.3.0"
+description = "Pocket AI REST and MCP integration with explicit write controls"
 requires-python = ">=3.11"
 dependencies = ["requests>=2.32.3,<3", "tzdata>=2024.1; sys_platform == 'win32'"]
 license = {text = "MIT (upstream declaration; see NOTICE.md)"}
@@ -16,6 +16,8 @@ mcp = ["mcp>=1.26,<2"]
 
 [project.scripts]
 pocket-ai = "pocket_api:main"
+pocket-interface = "pocket_interface:main"
+pocket-mcp-server = "pocket_server:main"
 
 [tool.setuptools]
-py-modules = ["pocket_api", "pocket_models", "pocket_mcp", "pocket_webhooks"]
+py-modules = ["pocket_api", "pocket_models", "pocket_mcp", "pocket_webhooks", "pocket_catalog", "pocket_operations", "pocket_interface", "pocket_server"]

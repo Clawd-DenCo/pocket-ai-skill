@@ -1,5 +1,7 @@
 # Implementation and verification status
 
+This is the historical 0.2.0 verification record. For the 0.3.0 interface expansion, see [expansion status](EXPANSION-STATUS.md) and [API coverage](API-COVERAGE.md).
+
 Date: 2026-11-22. Owner: Zandr. Candidate version: 0.2.0.
 
 ## Completed repository work

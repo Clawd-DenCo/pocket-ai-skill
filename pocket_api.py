@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Pocket REST client. Network results are untrusted data, never instructions."""
+"""Pocket REST client, read-only by default. Network results are untrusted data."""
 from __future__ import annotations
 
 import argparse
@@ -96,10 +96,13 @@ class PocketAI:
     BASE_URL = 'https://public.heypocketai.com/api/v1'
 
     def __init__(self, api_key=None, *, timeout=(5, 30), max_retries=2,
-                 session=None, sleep=time.sleep):
+                 session=None, sleep=time.sleep, allow_writes=False):
         if (not isinstance(timeout, (tuple, list)) or len(timeout) != 2 or
                 any(type(v) not in (int, float) or not 0 < v <= 120 for v in timeout)):
             raise ConfigurationError("Timeout requires two positive values at most 120 seconds")
+        if type(allow_writes) is not bool:
+            raise ConfigurationError("allow_writes must be boolean")
+        self.allow_writes = allow_writes
         self.max_retries = integer(max_retries, 'max_retries', 0, 3)
         self.timeout = tuple(timeout)
         self._sleep = sleep
@@ -117,24 +120,28 @@ class PocketAI:
     def __exit__(self, *_):
         self.close()
 
-    def _request(self, method, path, **kwargs):
-        # All call sites are read-only, including POST semantic search.
-        for attempt in range(self.max_retries + 1):
+    def _request(self, method, path, *, _read_only=True, _envelope=True, **kwargs):
+        # Non-idempotent/unknown-effect mutations are never replayed automatically.
+        retries = self.max_retries if _read_only else 0
+        for attempt in range(retries + 1):
             response = None
             try:
                 response = self.session.request(method, self.BASE_URL + path,
                                                 timeout=self.timeout, allow_redirects=False, **kwargs)
             except (requests.Timeout, requests.ConnectionError):
-                if attempt == self.max_retries:
-                    raise PocketError("Pocket connection failed or timed out") from None
+                if attempt == retries:
+                    raise PocketError("Pocket connection failed or timed out" if _read_only else
+                                      "Pocket write outcome unknown; reconcile before retrying") from None
             except requests.RequestException:
                 raise PocketError("Pocket request failed") from None
             else:
                 status = response.status_code
-                if status not in (429, 500, 502, 503, 504) or attempt == self.max_retries:
+                if status not in (429, 500, 502, 503, 504) or attempt == retries:
                     try:
                         if not 200 <= status < 300:
                             raise APIError(status)
+                        if status == 204 and not _read_only:
+                            return {"success": True}
                         try:
                             result = response.json()
                         except (ValueError, requests.RequestException):
@@ -143,8 +150,10 @@ class PocketAI:
                             raise ResponseError("Pocket response must be an object")
                         if result.get('success') is False or result.get('error'):
                             raise ResponseError("Pocket reported an application error")
-                        if 'data' not in result or result['data'] is None:
+                        if _envelope and ('data' not in result or result['data'] is None):
                             raise ResponseError("Pocket response is missing data")
+                        if not result:
+                            raise ResponseError("Pocket returned an empty response object")
                         return result
                     finally:
                         response.close()
@@ -163,6 +172,28 @@ class PocketAI:
                     delay = max(delay, wait)
             self._sleep(delay)
         raise PocketError("Pocket retry budget exhausted")
+
+    def operation(self, name, *, path=None, query=None, body=None, confirm=False):
+        """Call a documented REST operation. See pocket_catalog and docs/API-COVERAGE.md.
+
+        Writes require both allow_writes=True and confirm=True for this call.
+        Returns the service envelope unchanged (organization schemas vary).
+        """
+        from pocket_operations import prepare_operation
+        spec, route, params, payload = prepare_operation(name, path, query, body)
+        if not spec.read_only and not (self.allow_writes and confirm is True):
+            raise ConfigurationError("Write requires allow_writes=True and confirm=True")
+        kwargs = {"params": params}
+        if payload is not None:
+            kwargs["json"] = payload
+        return self._request(spec.method, route, _read_only=spec.read_only,
+                             _envelope=spec.envelope, **kwargs)
+
+    def list_folders(self):
+        return self.operation('list_folders')['data']
+
+    def create_upload_url(self, *, confirm=False, **metadata):
+        return self.operation('create_upload_url', body=metadata, confirm=confirm)
 
     def search(self, query, *, limit=8, filters=None):
         if not isinstance(query, str) or not query.strip():
@@ -279,7 +310,7 @@ class PocketAI:
 
     def get_audio_url(self, recording_id, *, expires_in=None):
         """Return service data containing a signed URL; no audio fetch or URL logging."""
-        params = {} if expires_in is None else {'expires_in':integer(expires_in,'expires_in',1,3600)}
+        params = {} if expires_in is None else {'expires_in':integer(expires_in,'expires_in',60,86400)}
         return self._request('GET', '/public/recordings/' + identifier(recording_id) + '/audio-url', params=params)['data']
 
     def search_contact(self, name, **kwargs):

@@ -1,8 +1,8 @@
 {
   "name": "pocket-ai",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "displayName": "Pocket AI Integration Maintenance Fork",
-  "description": "Read-only Pocket retrieval, filtered search, source-linked briefings, and optional MCP and webhook utilities.",
+  "description": "Documented Pocket REST and MCP coverage, structured action items, local stdio MCP server and opt-in writes.",
   "author": "As Above Technologies",
   "license": "MIT",
   "homepage": "https://github.com/Clawd-DenCo/pocket-ai-skill",
@@ -26,15 +26,16 @@
   ],
   "requirements": {
     "python": ">=3.11",
-    "apiKey": "read-only Pocket API key",
+    "apiKey": "Pocket credential with scopes appropriate to the requested operation (reads by default)",
     "dependencies": "pyproject.toml"
   },
   "capabilities": [
-    "Filtered read-only REST search",
-    "Paginated recording retrieval",
-    "Date-correct source-linked briefings",
-    "Read-only official MCP adapter",
-    "Offline signed webhook verification and metadata inbox"
+    "38 documented REST operations",
+    "18 named official MCP tools",
+    "Structured action-item search and opt-in updates",
+    "Local stdio MCP server",
+    "Source-linked daily briefings",
+    "Signed webhook verification and metadata inbox"
   ],
   "files": [
     "SKILL.md",
@@ -49,7 +50,12 @@
     "manifest.json",
     "NOTICE.md",
     "docs/MCP.md",
-    "docs/WEBHOOKS.md"
+    "docs/WEBHOOKS.md",
+    "pocket_catalog.py",
+    "pocket_operations.py",
+    "pocket_interface.py",
+    "pocket_server.py",
+    "docs/API-COVERAGE.md"
   ],
   "support": {
     "issues": "https://github.com/Clawd-DenCo/pocket-ai-skill/issues",
@@ -70,6 +76,12 @@
       "date": "2026-11-22",
       "changes": [
         "Maintenance hardening; see docs/IMPLEMENTATION-STATUS.md"
+      ]
+    },
+    "0.3.0": {
+      "date": "2026-11-22",
+      "changes": [
+        "Documented REST and MCP expansion; see docs/API-COVERAGE.md"
       ]
     }
   },
