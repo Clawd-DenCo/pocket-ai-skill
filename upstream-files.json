@@ -1,0 +1,48 @@
+{
+  "source": "https://clawhub.ai/asabovetech/skills/pocket-ai",
+  "version": "1.0.1",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 3325,
+      "sha256": "367812d27181d3a7ed0c0718b4db493ac27751b3c04988b39d4c56500e627d32",
+      "contentType": "text/markdown"
+    },
+    {
+      "path": "SKILL.md",
+      "size": 6347,
+      "sha256": "91b0683487a68f27a9c9cf4a7db31a1ebe43390376b8e5ac76d6e40b22965ef0",
+      "contentType": "text/markdown"
+    },
+    {
+      "path": "examples.md",
+      "size": 5472,
+      "sha256": "b4d68b2796f3b7d2ded9f21aefd24aaa634e4a52a85987c2f4039f6cb431d0cf",
+      "contentType": "text/markdown"
+    },
+    {
+      "path": "manifest.json",
+      "size": 1903,
+      "sha256": "c671c8be26b81d2a83afc0560104ccc0c9c4ac3153b7c788ea885fde26e480d0",
+      "contentType": "application/json"
+    },
+    {
+      "path": "pocket_api.py",
+      "size": 9148,
+      "sha256": "a61bc53c291ac08f5b6d8c3c50b770e04447fd7bacfbb17f60cc040ac4b1a7ac",
+      "contentType": "text/plain"
+    },
+    {
+      "path": "search.sh",
+      "size": 342,
+      "sha256": "ba83063cf3ffc1b0ed447ea6c937a0edf500ccb2e8823e9373c11dbb24974c67",
+      "contentType": "application/x-sh"
+    },
+    {
+      "path": "skill-card.md",
+      "size": 2431,
+      "sha256": "8f3be348f571f65b59497a74d6d034e59f03200254e975761ef43759afc52d03",
+      "contentType": "text/markdown"
+    }
+  ]
+}
